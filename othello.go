@@ -84,24 +84,24 @@ func iterStraight(positions *[][]Position, horizontal bool) {
   }
 }
 
-func iterDiag(positions *[][]Position, ordered bool, mirror bool) {
-  x, y, n, lastX := 0, 0, 0, BOARD_SIZE - 1
+func iterDiag(positions *[][]Position, mirror bool) {
+  x, y, n := 0, 0, 0
   rx, ry := &x, &y
   var line []Position
   if !mirror { rx, ry = ry, rx }
-  if !ordered { lastX-- }
-  for x < BOARD_SIZE - 1 {
-    startLine := x == n
+  for n < 2 * BOARD_SIZE {
+    diagonalLength := n % BOARD_SIZE
+    startLine := x == diagonalLength
     if startLine {
       n++
       if line != nil { *positions = append(*positions, line) }
-      line = make([]Position, 0, n)
+      line = make([]Position, 0)
       x = 0
     } else {
       x++
     }
-    y = n - x
-    if ordered {
+    y = diagonalLength - x
+    if n < BOARD_SIZE {
       line = append(line, Position{*rx, *ry})
     } else {
       line = append(line, Position{BOARD_SIZE - 1 - *rx, BOARD_SIZE - 1 - *ry})
@@ -152,10 +152,8 @@ func TestBoardRun() [][]Position {
 
 func init() {
   boardRun = make([][]Position, 0)
-  //iterStraight(&boardRun, true)
-  //iterStraight(&boardRun, false)
-  iterDiag(&boardRun, false, false)
-  //iterDiag(&boardRun, false, true)
-  //iterDiag(&boardRun, true, false)
-  //iterDiag(&boardRun, true, true)
+  iterStraight(&boardRun, true)
+  iterStraight(&boardRun, false)
+  iterDiag(&boardRun, false)
+  iterDiag(&boardRun, true)
 }
