@@ -1,11 +1,11 @@
 package othello
 
-const MAX_DEPTH = 1
+const MAX_DEPTH = 5
 
 func evaluateMove(move []Position, board Board, player Color, currentPlayer Color, depth int) int {
 	modifiedBoard := &board
 	for _, position := range move {
-		modifiedBoard.SetCell(position.X, position.Y, currentPlayer)
+		modifiedBoard.SetCell(position.H, position.V, currentPlayer)
 	}
 	if depth == 0 {
 		score := len(move)
@@ -20,13 +20,12 @@ func evaluateMove(move []Position, board Board, player Color, currentPlayer Colo
 }
 
 func minMax(board *Board, player Color, currentPlayer Color, depth int) int {
-	isMinNode := player != currentPlayer
 	possibleMoves := PossibleMoves(board, currentPlayer)
 	globalScore := 0
 
 	for _, move := range possibleMoves {
 		score := evaluateMove(move, *board, player, currentPlayer, depth)
-		if score < globalScore != isMinNode {
+		if score > globalScore {
 			globalScore = score
 		}
 	}
